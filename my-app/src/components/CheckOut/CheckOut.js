@@ -1,6 +1,62 @@
+import { useState } from "react";
 import styles from "./CheckOut.module.css";
 
 const CheckOut = () => {
+  const [reciverData, setReciverData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+  });
+  const [errors, setErrors] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+  });
+  const [showContent, setShowContent] = useState({
+    promo: false,
+  });
+
+  const handleReciverChange = (e) => {
+    setReciverData((state) => ({
+      ...state,
+      [e.target.name]: e.target.value,
+    }));
+  };
+  const validate = (e) => {
+    switch (e.target.name) {
+      case "email":
+        setErrors((state) => ({
+          ...state,
+          [e.target.name]: !reciverData.email.match(
+            /^[a-zA-Z0-9]{4,}@[a-zA-Z]+.[a-zA-Z]{2,}/
+          ),
+        }));
+        break;
+      case "firstName":
+        setErrors((state) => ({
+          ...state,
+          [e.target.name]: reciverData.firstName.length < 4,
+        }));
+        break;
+      case "lastName":
+        setErrors((state) => ({
+          ...state,
+          [e.target.name]: reciverData.lastName.length < 4,
+        }));
+        break;
+      case "phone":
+        setErrors((state) => ({
+          ...state,
+          [e.target.name]: reciverData.phone.length < 9,
+        }));
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <section className={styles["container"]}>
       <div className={styles["order-cont"]}>
@@ -16,20 +72,23 @@ const CheckOut = () => {
             <div className={styles["ship-item"]}>
               <i className="fa-solid fa-shop"></i>
               <div className={styles["desc-cont"]}>
-                <p className={styles["pick-up"]}>Pick Up * Mon, 03, 09:30</p>
-                <span className={styles["place"]}>
-                  910 7th Ave New York, NY 10019
-                </span>
+                <input type="text" value="Pick Up * Mon, 03, 09:30" disabled />
+                <input
+                  type="text"
+                  value="910 7th Ave New York, NY 10019"
+                  disabled
+                />
               </div>
+
               <button className={styles["edit-btn"]}>Edit</button>
             </div>
-
             <div className={styles["ship-item"]}>
               <i className="fa-solid fa-shop"></i>
               <div className={styles["desc-cont"]}>
-                <p className={styles["pick-up"]}>I'll come inside</p>
-                <span className={styles["place"]}>+ Pickup instructions</span>
+                <input type="text" value="I'll come inside" disabled />
+                <input type="text" value="+ Pickup instructions" disabled />
               </div>
+
               <button className={styles["edit-btn"]}>Edit</button>
             </div>
           </div>
@@ -40,19 +99,47 @@ const CheckOut = () => {
           <div className={styles["reciver-cont"]}>
             <div className={styles["input-cont"]}>
               <label htmlFor="name">First Name</label>
-              <input type="text" placeholder="First name" />
+              <input
+                type="text"
+                placeholder="First name"
+                name="firstName"
+                onChange={handleReciverChange}
+                onBlur={(e) => validate(e)}
+                style={{ border: errors.firstName ? "1px solid red" : "" }}
+              />
             </div>
             <div className={styles["input-cont"]}>
               <label htmlFor="name">Last name</label>
-              <input type="text" placeholder="Last name" />
+              <input
+                type="text"
+                placeholder="Last name"
+                name="lastName"
+                onChange={handleReciverChange}
+                onBlur={(e) => validate(e)}
+                style={{ border: errors.lastName ? "1px solid red" : "" }}
+              />
             </div>
             <div className={styles["input-cont"]}>
               <label htmlFor="name">Email address</label>
-              <input type="text" placeholder="Email address" />
+              <input
+                type="text"
+                name="email"
+                placeholder="Email address"
+                onChange={handleReciverChange}
+                onBlur={(e) => validate(e)}
+                style={{ border: errors.email ? "1px solid red" : "" }}
+              />
             </div>
             <div className={styles["input-cont"]}>
               <label htmlFor="name">Mobile phone number</label>
-              <input type="number" placeholder="Mobile phone number" />
+              <input
+                type="number"
+                name="phone"
+                placeholder="Mobile phone number"
+                onChange={handleReciverChange}
+                onBlur={(e) => validate(e)}
+                style={{ border: errors.phone ? "1px solid red" : "" }}
+              />
             </div>
           </div>
         </div>
@@ -61,23 +148,31 @@ const CheckOut = () => {
           <h2 className={styles["title"]}>PAYMENT</h2>
           <div className={styles["paymet-methods"]}>
             <span className={styles["secure-icon"]}>
-              Secure <i class="fa-solid fa-lock"></i>
+              Secure <i className="fa-solid fa-lock"></i>
             </span>
             <div className={styles["payment-item"]}>
               <input type="radio" />
-              <i class="fa-solid fa-credit-card"></i>
+              <i className="fa-solid fa-credit-card"></i>
               <span className={styles["payment-title"]}>Credit/Debit Card</span>
             </div>
             <div className={styles["payment-item"]}>
               <input type="radio" />
-              <i class="fa-solid fa-money-bill"></i>
+              <i className="fa-solid fa-money-bill-1-wave"></i>
               <span className={styles["payment-title"]}>Cash</span>
             </div>
             <div className={styles["promo-code-cont"]}>
-              <button className={styles["promo-code-btn"]}>
-                <i class="fa-solid fa-money-bill"></i> Add promo code
+              <button
+                className={styles["promo-code-btn"]}
+                onClick={() =>
+                  setShowContent((state) => ({
+                    ...state,
+                    promo: !showContent.promo,
+                  }))
+                }
+              >
+                <i className="fa-solid fa-money-bill"></i> Add promo code
               </button>
-              <input type="text" />
+              {showContent.promo && <input type="text" name="promoCode" />}
             </div>
           </div>
         </div>
@@ -122,11 +217,24 @@ const CheckOut = () => {
               <span>$0.00</span>
             </li>
             <li className={styles["discount-cont"]}>
-              <button className={styles["tip-btn"]}>None</button>
-              <button className={styles["tip-btn"]}>5%</button>
-              <button className={styles["tip-btn"]}>10%</button>
-              <button className={styles["tip-btn"]}>15</button>
-              <button className={styles["tip-btn"]}>Other</button>
+              <button className={styles["tip-btn"]} name="None">
+                None
+              </button>
+              <button className={styles["tip-btn"]} name="5">
+                5%
+              </button>
+              <button className={styles["tip-btn"]} name="10">
+                10%
+              </button>
+              <button className={styles["tip-btn"]} name="15">
+                15
+              </button>
+              <input
+                className={styles["tip-btn"]}
+                type="number"
+                name="other"
+                placeholder="Other"
+              />
             </li>
             <li className={styles["info-item"]}>
               <span className={styles["total-sum"]}>Total</span>
