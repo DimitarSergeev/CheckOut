@@ -8,6 +8,10 @@ const CheckOut = () => {
     email: "",
     phone: "",
   });
+  const [details, setDetails] = useState({
+    date: "Pick Up * Mon, 03, 09:30",
+    street: "910 7th Ave New York, NY 10019",
+  });
   const [errors, setErrors] = useState({
     firstName: "",
     lastName: "",
@@ -16,8 +20,16 @@ const CheckOut = () => {
   });
   const [showContent, setShowContent] = useState({
     promo: false,
+    pickUp: false,
+    instructions: false,
   });
 
+  const handleDetailsChange = (e) => {
+    setDetails((state) => ({
+      ...state,
+      [e.target.name]: e.target.value,
+    }));
+  };
   const handleReciverChange = (e) => {
     setReciverData((state) => ({
       ...state,
@@ -56,7 +68,7 @@ const CheckOut = () => {
         break;
     }
   };
-
+console.log(details);
   return (
     <section className={styles["container"]}>
       <div className={styles["order-cont"]}>
@@ -72,24 +84,86 @@ const CheckOut = () => {
             <div className={styles["ship-item"]}>
               <i className="fa-solid fa-shop"></i>
               <div className={styles["desc-cont"]}>
-                <input type="text" value="Pick Up * Mon, 03, 09:30" disabled />
                 <input
                   type="text"
-                  value="910 7th Ave New York, NY 10019"
-                  disabled
+                  value={details.date}
+                  disabled={!showContent.pickUp}
+                  name="date"
+                  onChange={handleDetailsChange}
+                />
+                <input
+                  type="text"
+                  value={details.street}
+                  name="street"
+                  onChange={handleDetailsChange}
+                  disabled={!showContent.pickUp}
                 />
               </div>
-
-              <button className={styles["edit-btn"]}>Edit</button>
+              {showContent.pickUp ? (
+                <button
+                  className={styles["save-btn"]}
+                  onClick={() =>
+                    setShowContent((state) => ({
+                      ...state,
+                      pickUp: !showContent.pickUp,
+                    }))
+                  }
+                >
+                  Save
+                </button>
+              ) : (
+                <button
+                  className={styles["edit-btn"]}
+                  onClick={() =>
+                    setShowContent((state) => ({
+                      ...state,
+                      pickUp: !showContent.pickUp,
+                    }))
+                  }
+                >
+                  Edit
+                </button>
+              )}
             </div>
             <div className={styles["ship-item"]}>
               <i className="fa-solid fa-shop"></i>
               <div className={styles["desc-cont"]}>
-                <input type="text" value="I'll come inside" disabled />
-                <input type="text" value="+ Pickup instructions" disabled />
+                <input
+                  type="text"
+                  value="I'll come inside"
+                  disabled={!showContent.instructions}
+                />
+                <input
+                  type="text"
+                  value="+ Pickup instructions"
+                  disabled={!showContent.instructions}
+                />
               </div>
-
-              <button className={styles["edit-btn"]}>Edit</button>
+              {showContent.instructions ? (
+                <button
+                  className={styles["save-btn"]}
+                  onClick={() =>
+                    setShowContent((state) => ({
+                      ...state,
+                      instructions: !showContent.instructions,
+                    }))
+                  }
+                >
+                  Save
+                </button>
+              ) : (
+                <button
+                  className={styles["edit-btn"]}
+                  onClick={() =>
+                    setShowContent((state) => ({
+                      ...state,
+                      instructions: !showContent.instructions,
+                    }))
+                  }
+                >
+                  Edit
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -156,9 +230,11 @@ const CheckOut = () => {
               <span className={styles["payment-title"]}>Credit/Debit Card</span>
             </div>
             <div className={styles["payment-item"]}>
-              <input type="radio" />
-              <i className="fa-solid fa-money-bill-1-wave"></i>
-              <span className={styles["payment-title"]}>Cash</span>
+              <label htmlFor="cash" className={styles["radio-cont"]}>
+                <input type="radio" name="cash" />
+                <i className="fa-solid fa-money-bill-1-wave"></i>
+                Cash
+              </label>
             </div>
             <div className={styles["promo-code-cont"]}>
               <button
