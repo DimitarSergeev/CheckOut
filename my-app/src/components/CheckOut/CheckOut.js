@@ -225,38 +225,38 @@ const CheckOut = () => {
 
         <div className={styles["payment-cont"]}>
           <h2 className={styles["title"]}>PAYMENT</h2>
-            <div className={styles['paymet-methods']}>
-              <span className={styles['secure-icon']}>
-                Secure <i className="fa-solid fa-lock"></i>
-              </span>
+          <div className={styles["paymet-methods"]}>
+            <span className={styles["secure-icon"]}>
+              Secure <i className="fa-solid fa-lock"></i>
+            </span>
 
-              <label htmlFor="credit-debit" className={styles['payment-item']}>
-                <input
-                  type="radio"
-                  id="credit-debit"
-                  name="payment-method"
-                  value="credit-debit"
-                  className={styles['radio-input']}
-                  checked={paymentMethod === 'credit-debit'}
-                  onChange={handlePaymentMethod}
-                />
-                <i className="fa-solid fa-credit-card"></i>
-                <span className={styles['payment-title']}>Credit/Debit Card</span>
-              </label>
+            <label htmlFor="credit-debit" className={styles["payment-item"]}>
+              <input
+                type="radio"
+                id="credit-debit"
+                name="payment-method"
+                value="credit-debit"
+                className={styles["radio-input"]}
+                checked={paymentMethod === "credit-debit"}
+                onChange={handlePaymentMethod}
+              />
+              <i className="fa-solid fa-credit-card"></i>
+              <span className={styles["payment-title"]}>Credit/Debit Card</span>
+            </label>
 
-              <label htmlFor="cash" className={styles['payment-item']}>
-                <input
-                  type="radio"
-                  id="cash"
-                  name="payment-method"
-                  value="cash"
-                  className={styles['radio-input']}
-                  checked={paymentMethod === 'cash'}
-                  onChange={handlePaymentMethod}
-                />
-                <i className="fa-solid fa-money-bill-1-wave"></i>
-                <span className={styles['payment-title']}>Cash</span>
-              </label>
+            <label htmlFor="cash" className={styles["payment-item"]}>
+              <input
+                type="radio"
+                id="cash"
+                name="payment-method"
+                value="cash"
+                className={styles["radio-input"]}
+                checked={paymentMethod === "cash"}
+                onChange={handlePaymentMethod}
+              />
+              <i className="fa-solid fa-money-bill-1-wave"></i>
+              <span className={styles["payment-title"]}>Cash</span>
+            </label>
             <div className={styles["promo-code-cont"]}>
               <button
                 className={styles["promo-code-btn"]}
@@ -272,7 +272,6 @@ const CheckOut = () => {
               {showContent.promo && <input type="text" name="promoCode" />}
             </div>
           </div>
-
         </div>
 
         <div className={styles["order-info"]}>
