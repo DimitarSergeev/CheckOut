@@ -85,6 +85,8 @@
 
 .ship-item i {
   align-self: center;
+  font-size: 22px;
+  color: #252323;
 }
 
 .desc-cont {
@@ -96,11 +98,15 @@
 .desc-cont input[type="text"] {
   border: none;
   max-width: 300px;
+  font-size: 16px;
   padding: 6px;
   border-radius: 6px;
   color: black;
   font-weight: 600;
   letter-spacing: 1.1px;
+}
+.desc-cont input[type="text"]:focus{
+  border: 1px solid rgb(184, 182, 182);
 }
 
 .desc-cont input[type="text"]:nth-child(2) {
@@ -208,6 +214,9 @@
   background-color: #444243;
   border-radius: 50%;
 }
+.payment-title{
+  font-weight: 600;
+}
 
 .card-holder {
   width: 70%;
@@ -266,7 +275,7 @@
 }
 .card-date span,
 .card-cvv label {
-  padding: 0 6px;
+  padding: 0 6px 0 6px;
   font-size: 18px;
 }
 .card-date label span {

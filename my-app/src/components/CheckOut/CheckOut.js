@@ -22,20 +22,17 @@ const CheckOut = () => {
     cardHolder: "",
   });
 
-  const [details, setDetails] = useState({
-    date: "Pick Up * Mon, 03, 09:30",
-    street: "910 7th Ave New York, NY 10019",
-  });
   const [errors, setErrors] = useState({
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
+    addres: ''
   });
   const [showContent, setShowContent] = useState({
     promo: false,
+    delivery: false,
     pickUp: false,
-    instructions: false,
   });
   const [paymentErrors, setPaymentErrors] = useState({
     cardNumber: "",
@@ -43,6 +40,7 @@ const CheckOut = () => {
     year: "",
     cvv: "",
     cardHolder: "",
+    addres: "",
   });
 
   const handlePaymentInfo = (e) => {
@@ -54,17 +52,28 @@ const CheckOut = () => {
   const handlePaymentMethod = (e) => {
     setPaymentMethod(e.target.value);
   };
-  const handleDetailsChange = (e) => {
-    setDetails((state) => ({
-      ...state,
-      [e.target.name]: e.target.value,
-    }));
-  };
+
   const handleReciverChange = (e) => {
-    setReciverData((state) => ({
-      ...state,
-      [e.target.name]: e.target.value,
-    }));
+    if (e.target.name === "street" && showContent.delivery) {
+      setReciverData((state) => ({
+        ...state,
+        addres: {
+          delivery: e.target.value,
+        },
+      }));
+    } else if (e.target.name === "pickUp" && showContent.pickUp) {
+      setReciverData((state) => ({
+        ...state,
+        addres: {
+          pickUp: e.target.value,
+        },
+      }));
+    } else {
+      setReciverData((state) => ({
+        ...state,
+        [e.target.name]: e.target.value,
+      }));
+    }
   };
   const validate = (e) => {
     switch (e.target.name) {
@@ -94,6 +103,22 @@ const CheckOut = () => {
           [e.target.name]: reciverData.phone.length < 9,
         }));
         break;
+      case "street":
+        if (showContent.delivery) {
+          setErrors((state) => ({
+            ...state,
+            addres: e.target.value.length <= 0,
+          }));
+          break;
+        }
+      case "pickUp":
+        if (showContent.pickUp) {
+          setErrors((state) => ({
+            ...state,
+            addres: e.target.value.length <= 0,
+          }));
+          break;
+        }
       default:
         break;
     }
@@ -131,39 +156,72 @@ const CheckOut = () => {
           [e.target.name]: paymentInfo.cvv.length === 3 ? false : true,
         }));
         break;
-
       default:
         break;
     }
   };
+  console.log(paymentErrors);
   return (
     <section className={styles["container"]}>
       <div className={styles["order-cont"]}>
         <div className={styles["title-cont"]}>
-          <span className={styles["sub-title"]}>CHECKOUT</span>
-          <h1 className={styles["restaurant-title"]}>
-            ELLA MOZZARELLA PIZZERIA
-          </h1>
+          <span className={styles["sub-title"]}>Количка</span>
+          <h1 className={styles["restaurant-title"]}>PizzAmerica</h1>
         </div>
         <div className={styles["ship-method"]}>
-          <h2 className={styles["title"]}>DETAILS</h2>
+          <h2 className={styles["title"]}>Детайли</h2>
           <div className={styles["ship-items"]}>
+            <div className={styles["ship-item"]}>
+              <i className="fa-sharp fa-solid fa-truck"></i>
+              <div className={styles["desc-cont"]}>
+                <input type="text" defaultValue="Адрес за доставка" disabled />
+                <input
+                  type="text"
+                  placeholder="910 7th Ave New York, NY 10019"
+                  name="street"
+                  onChange={handleReciverChange}
+                  onBlur={(e)=> validate(e)}
+                  disabled={!showContent.delivery}
+                  required
+                />
+              </div>
+              {showContent.delivery ? (
+                <button
+                  className={styles["save-btn"]}
+                  onClick={() =>
+                    setShowContent((state) => ({
+                      ...state,
+                      delivery: !showContent.delivery,
+                    }))
+                  }
+                >
+                  Откажи
+                </button>
+              ) : (
+                <button
+                  className={styles["edit-btn"]}
+                  disabled={showContent.pickUp}
+                  onClick={() =>
+                    setShowContent((state) => ({
+                      ...state,
+                      delivery: !showContent.delivery,
+                    }))
+                  }
+                >
+                  Избери
+                </button>
+              )}
+            </div>
             <div className={styles["ship-item"]}>
               <i className="fa-solid fa-shop"></i>
               <div className={styles["desc-cont"]}>
+                <input type="text" defaultValue="Взимане от място" disabled />
                 <input
                   type="text"
-                  value={details.date}
+                  name="pickUp"
+                  placeholder="Уточнение"
                   disabled={!showContent.pickUp}
-                  name="date"
-                  onChange={handleDetailsChange}
-                />
-                <input
-                  type="text"
-                  value={details.street}
-                  name="street"
-                  onChange={handleDetailsChange}
-                  disabled={!showContent.pickUp}
+                  onChange={handleReciverChange}
                 />
               </div>
               {showContent.pickUp ? (
@@ -176,7 +234,7 @@ const CheckOut = () => {
                     }))
                   }
                 >
-                  Save
+                  Откажи
                 </button>
               ) : (
                 <button
@@ -187,48 +245,9 @@ const CheckOut = () => {
                       pickUp: !showContent.pickUp,
                     }))
                   }
+                  disabled={showContent.delivery}
                 >
-                  Edit
-                </button>
-              )}
-            </div>
-            <div className={styles["ship-item"]}>
-              <i className="fa-solid fa-shop"></i>
-              <div className={styles["desc-cont"]}>
-                <input
-                  type="text"
-                  value="I'll come inside"
-                  disabled={!showContent.instructions}
-                />
-                <input
-                  type="text"
-                  value="+ Pickup instructions"
-                  disabled={!showContent.instructions}
-                />
-              </div>
-              {showContent.instructions ? (
-                <button
-                  className={styles["save-btn"]}
-                  onClick={() =>
-                    setShowContent((state) => ({
-                      ...state,
-                      instructions: !showContent.instructions,
-                    }))
-                  }
-                >
-                  Save
-                </button>
-              ) : (
-                <button
-                  className={styles["edit-btn"]}
-                  onClick={() =>
-                    setShowContent((state) => ({
-                      ...state,
-                      instructions: !showContent.instructions,
-                    }))
-                  }
-                >
-                  Edit
+                  Избери
                 </button>
               )}
             </div>
@@ -236,57 +255,58 @@ const CheckOut = () => {
         </div>
 
         <div className={styles["receiver-info"]}>
-          <h2 className={styles["title"]}>CONTACT</h2>
+          <h2 className={styles["title"]}>Контакти</h2>
           <div className={styles["reciver-cont"]}>
             <div className={styles["input-cont"]}>
-              <label htmlFor="name">First Name</label>
+              <label htmlFor="name">Име *</label>
               <input
                 type="text"
                 placeholder="First name"
                 name="firstName"
                 onChange={handleReciverChange}
                 onBlur={(e) => validate(e)}
-                style={{ border: errors.firstName ? "1px solid red" : "" }}
+                style={{
+                  border: errors.firstName ? "1px solid firebrick" : "",
+                }}
               />
             </div>
             <div className={styles["input-cont"]}>
-              <label htmlFor="name">Last name</label>
+              <label htmlFor="name">Фамилия *</label>
               <input
                 type="text"
                 placeholder="Last name"
                 name="lastName"
                 onChange={handleReciverChange}
                 onBlur={(e) => validate(e)}
-                style={{ border: errors.lastName ? "1px solid red" : "" }}
+                style={{ border: errors.lastName ? "1px solid firebrick" : "" }}
               />
             </div>
             <div className={styles["input-cont"]}>
-              <label htmlFor="name">Email address</label>
+              <label htmlFor="name">Имейл</label>
               <input
                 type="text"
                 name="email"
                 placeholder="Email address"
                 onChange={handleReciverChange}
                 onBlur={(e) => validate(e)}
-                style={{ border: errors.email ? "1px solid red" : "" }}
               />
             </div>
             <div className={styles["input-cont"]}>
-              <label htmlFor="name">Mobile phone number</label>
+              <label htmlFor="name">Телефонен номер *</label>
               <input
                 type="number"
                 name="phone"
                 placeholder="Mobile phone number"
                 onChange={handleReciverChange}
                 onBlur={(e) => validate(e)}
-                style={{ border: errors.phone ? "1px solid red" : "" }}
+                style={{ border: errors.phone ? "1px solid firebrick" : "" }}
               />
             </div>
           </div>
         </div>
 
         <div className={styles["payment-cont"]}>
-          <h2 className={styles["title"]}>PAYMENT</h2>
+          <h2 className={styles["title"]}>Метод на плащане</h2>
           <div className={styles["paymet-methods"]}>
             <span className={styles["secure-icon"]}>
               Secure <i className="fa-solid fa-lock"></i>
@@ -303,7 +323,9 @@ const CheckOut = () => {
                 onChange={handlePaymentMethod}
               />
               <i className="fa-solid fa-credit-card"></i>
-              <span className={styles["payment-title"]}>Credit/Debit Card</span>
+              <span className={styles["payment-title"]}>
+                Кредитна / Дебитна карта
+              </span>
             </label>
 
             {paymentMethod === "credit-debit" && (
@@ -313,7 +335,7 @@ const CheckOut = () => {
                   <img src={payPass} alt="" />
                 </div>
                 <div className={styles["card-number"]}>
-                  <label>Card Number </label>
+                  <label>Номер на картата</label>
                   <input
                     type="number"
                     placeholder="1234 5678 1234 5678"
@@ -359,7 +381,7 @@ const CheckOut = () => {
 
                 <div className={styles["card-name"]}>
                   <div className={styles["name-input"]}>
-                    <label>Card Holder</label>
+                    <label>Име на картодържател</label>
                     <input
                       type="text"
                       name="cardHolder"
@@ -384,7 +406,7 @@ const CheckOut = () => {
                 onChange={handlePaymentMethod}
               />
               <i className="fa-solid fa-money-bill-1-wave"></i>
-              <span className={styles["payment-title"]}>Cash</span>
+              <span className={styles["payment-title"]}>В брой</span>
             </label>
             <div className={styles["promo-code-cont"]}>
               <button
@@ -396,7 +418,8 @@ const CheckOut = () => {
                   }))
                 }
               >
-                <i className="fa-solid fa-money-bill"></i> Add promo code
+                <i className="fa-solid fa-money-bill"></i> Код за
+                отстъпка/ваучер
               </button>
               {showContent.promo && <input type="text" name="promoCode" />}
             </div>
@@ -404,7 +427,7 @@ const CheckOut = () => {
         </div>
 
         <div className={styles["order-info"]}>
-          <h2 className={styles["title"]}>YOUR ITEMS</h2>
+          <h2 className={styles["title"]}>Продукти</h2>
           <ul className={styles["items-cont"]}>
             <li className={styles["order-item"]}>
               <div className={styles["qty-count"]}>1x</div>
@@ -414,8 +437,8 @@ const CheckOut = () => {
                 </span>
                 <span className={styles["type"]}>12"</span>
                 <div className={styles["action-btns"]}>
-                  <button className={styles["edit-btnn"]}>Edit</button>
-                  <button className={styles["remove-btn"]}>Remove</button>
+                  <button className={styles["edit-btnn"]}>Редактиране</button>
+                  <button className={styles["remove-btn"]}>Премахване</button>
                 </div>
               </div>
               <span className={styles["price"]}>$15.50</span>
@@ -425,27 +448,27 @@ const CheckOut = () => {
       </div>
       <div className={styles["finish-order"]}>
         <div className={styles["content"]}>
-          <button className={styles["finish-btn"]}>Карта</button>
+          <button className={styles["finish-btn"]}>Плащане</button>
           <ul className={styles["order-summary"]}>
             <li className={styles["info-item"]}>
-              <span>Subtotal</span>
+              <span>Междинна сума</span>
               <span>$24.00</span>
             </li>
             <li className={styles["info-item"]}>
-              <span>Estimated Tax</span>
+              <span>Допълнителни разходи</span>
               <span>$2.13</span>
             </li>
             <li className={styles["info-item"]}>
-              <span>Tip Amount{"(None)"}</span>
+              <span>Размер на бакшиша{"(Няма)"}</span>
               <span>$0.00</span>
             </li>
             <li className={styles["info-item"]}>
-              <span>Tip 100% goes to the restaurant's workers</span>
+              <span>Бакшиша отива 100% при работниците на заведението</span>
               <span>$0.00</span>
             </li>
             <li className={styles["discount-cont"]}>
               <button className={styles["tip-btn"]} name="None">
-                None
+                Няма
               </button>
               <button className={styles["tip-btn"]} name="5">
                 5%
@@ -454,13 +477,13 @@ const CheckOut = () => {
                 10%
               </button>
               <button className={styles["tip-btn"]} name="15">
-                15
+                15%
               </button>
               <input
                 className={styles["tip-btn"]}
                 type="number"
                 name="other"
-                placeholder="Other"
+                placeholder="Друга сума"
               />
             </li>
             <li className={styles["info-item"]}>
