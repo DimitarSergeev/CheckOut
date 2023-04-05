@@ -136,7 +136,6 @@ const CheckOut = () => {
         break;
     }
   };
-  console.log(paymentErrors);
   return (
     <section className={styles["container"]}>
       <div className={styles["order-cont"]}>

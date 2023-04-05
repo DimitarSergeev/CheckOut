@@ -47,7 +47,7 @@
 
 .title-cont .sub-title {
   font-size: 18px;
-  font-weight: bold;   
+  font-weight: bold;
   color: #525150;
 }
 
@@ -120,7 +120,7 @@
 }
 
 .save-btn {
-  background-color:black;
+  background-color: black;
   color: white;
 }
 
@@ -198,7 +198,7 @@
 }
 
 .radio-input:checked:after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -209,48 +209,48 @@
   border-radius: 50%;
 }
 
-.card-holder{
+.card-holder {
   width: 70%;
   margin: 0 auto;
-  background-color: #10141E;
+  background-color: #10141e;
   border-radius: 12px;
 }
 
-.card-icons{
+.card-icons {
   display: flex;
   justify-content: space-between;
 }
-.card-icons img{
+.card-icons img {
   width: 40px;
   padding: 24px;
   object-fit: contain;
 }
 .card-number,
-.card-holder{
+.card-holder {
   display: flex;
   flex-direction: column;
-  text-align:start;
+  text-align: start;
 }
 .card-number label,
-.name-input label{
-  color: #474B69;
+.name-input label {
+  color: #474b69;
   font-size: 18px;
   font-weight: 600;
   padding-left: 24px;
 }
 .card-number input,
-.card-holder input{
+.card-holder input {
   max-width: fit-content;
   font-size: 18px;
   margin: 0px 0px 24px 24px;
   padding: 6px 0px;
 }
-.date-secret{
+.date-secret {
   display: flex;
   gap: 24px;
   padding-left: 24px;
 }
-.date-secret input{
+.date-secret input {
   max-width: 30px;
   font-size: 18px;
   border-radius: 2px;
@@ -258,44 +258,42 @@
   align-self: center;
 }
 .card-date,
-.card-cvv{
-  color: #474B69;
+.card-cvv {
+  color: #474b69;
   font-weight: 600;
   display: flex;
   margin: 0px 0px 12px 0;
 }
 .card-date span,
-.card-cvv label{
+.card-cvv label {
   padding: 0 6px;
   font-size: 18px;
 }
-.card-date label span{
+.card-date label span {
   display: flex;
   flex-direction: column;
   font-size: 14px;
 }
 
 .card-date input,
-.card-cvv input{
+.card-cvv input {
   margin-left: 0;
 }
-.mastercard{
-  max-width: fit-content;
-  padding-right: 12px;
-}
-.card-name{
+
+.card-name {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   padding-bottom: 24px;
 }
-.name-input{
+.name-input {
   display: flex;
   flex-direction: column;
 }
-.name-input label{
-  color: #474B69;
+.name-input label {
+  color: #474b69;
 }
-.name-input input{
+.name-input input {
   max-width: 350px;
 }
 .promo-code-cont {
@@ -424,8 +422,11 @@
   font-weight: bold;
   padding-top: 24px;
 }
+  .mastercard {
+    padding-right: 12px;
+  }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1324px) {
   .container {
     width: 100%;
     padding: 24px 0;
@@ -460,10 +461,32 @@
     display: flex;
     flex-direction: column;
   }
+  .card-number {
+    display: flex;
+  }
+  .card-number input {
+    width: 100%;
+  }
+  .card-number {
+    margin: 0 auto;
+  }
+.card-name{
+  flex-direction: column;
+  margin: 0 auto;
+}
+  .card-name,
+  .date-secret,
+  .card-number {
+    justify-content: center;
+  }
+  .mastercard {
+    margin: 0 auto;
+    max-width: fit-content;
+    padding-right: 12px;
+  }
 }
 
 @media screen and (max-width: 769px) {
-
   .container,
   .order-info {
     display: flex;
@@ -486,6 +509,35 @@
   }
 
   .desc-cont {
+    gap: 12px;
+  }
+
+  .card-number input,
+  .name-input input {
+    margin: 0;
+    margin: 12px 6px;
+  }
+  .card-holder {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .date-secret {
+    padding-left: 0;
+    gap: 0;
+  }
+}
+@media screen and (max-width: 420px) {
+  .card-number input,
+  .name-input input {
+    width: 90%;
+    margin: 0 auto;
+    margin-bottom: 12px;
+  }
+  .date-secret {
+    flex-direction: column;
+    align-items: center;
+    padding-left: 0;
+    padding-top: 12px;
     gap: 12px;
   }
 }
