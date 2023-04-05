@@ -1,5 +1,10 @@
-import { useState } from "react";
 import styles from "./CheckOut.module.css";
+
+import { useState } from "react";
+
+import chip from "./chip.png";
+import payPass from "./PayPassicon.png";
+import masterCard from "./Mastercard.png";
 
 const CheckOut = () => {
   const [reciverData, setReciverData] = useState({
@@ -9,10 +14,14 @@ const CheckOut = () => {
     phone: "",
   });
   const [paymentMethod, setPaymentMethod] = useState(null);
+  const [paymentInfo, setPaymentInfo] = useState({
+    cardNumber: "",
+    month: "",
+    year: "",
+    cvv: "",
+    cardHolder: "",
+  });
 
-  const handlePaymentMethod = (event) => {
-    setPaymentMethod(event.target.value);
-  };
   const [details, setDetails] = useState({
     date: "Pick Up * Mon, 03, 09:30",
     street: "910 7th Ave New York, NY 10019",
@@ -28,7 +37,23 @@ const CheckOut = () => {
     pickUp: false,
     instructions: false,
   });
+  const [paymentErrors, setPaymentErrors] = useState({
+    cardNumber: "",
+    month: "",
+    year: "",
+    cvv: "",
+    cardHolder: "",
+  });
 
+  const handlePaymentInfo = (e) => {
+    setPaymentInfo((state) => ({
+      ...state,
+      [e.target.name]: e.target.value,
+    }));
+  };
+  const handlePaymentMethod = (e) => {
+    setPaymentMethod(e.target.value);
+  };
   const handleDetailsChange = (e) => {
     setDetails((state) => ({
       ...state,
@@ -73,7 +98,45 @@ const CheckOut = () => {
         break;
     }
   };
-  console.log(details);
+
+  const validatePaymentInfo = (e) => {
+    switch (e.target.name) {
+      case "cardNumber":
+        setPaymentErrors((state) => ({
+          ...state,
+          [e.target.name]: paymentInfo.cardNumber.length === 16 ? false : true,
+        }));
+        break;
+      case "cardHolder":
+        setPaymentErrors((state) => ({
+          ...state,
+          [e.target.name]: paymentInfo.cardHolder.length >= 6 ? false : true,
+        }));
+        break;
+      case "month":
+        setPaymentErrors((state) => ({
+          ...state,
+          [e.target.name]: paymentInfo.month.length === 2 ? false : true,
+        }));
+        break;
+      case "year":
+        setPaymentErrors((state) => ({
+          ...state,
+          [e.target.name]: paymentInfo.year.length === 2 ? false : true,
+        }));
+        break;
+      case "cvv":
+        setPaymentErrors((state) => ({
+          ...state,
+          [e.target.name]: paymentInfo.cvv.length === 3 ? false : true,
+        }));
+        break;
+
+      default:
+        break;
+    }
+  };
+  console.log(paymentErrors);
   return (
     <section className={styles["container"]}>
       <div className={styles["order-cont"]}>
@@ -244,6 +307,73 @@ const CheckOut = () => {
               <span className={styles["payment-title"]}>Credit/Debit Card</span>
             </label>
 
+            {paymentMethod === "credit-debit" && (
+              <article className={styles["card-holder"]}>
+                <div className={styles["card-icons"]}>
+                  <img src={chip} alt="" />
+                  <img src={payPass} alt="" />
+                </div>
+                <div className={styles["card-number"]}>
+                  <label>Card Number </label>
+                  <input
+                    type="number"
+                    placeholder="1234 5678 1234 5678"
+                    name="cardNumber"
+                    onChange={handlePaymentInfo}
+                    onBlur={(e) => validatePaymentInfo(e)}
+                  />
+                </div>
+                <div className={styles["date-secret"]}>
+                  <div className={styles["card-date"]}>
+                    <label>
+                      <span>VALID</span>
+                      <span>THRU</span>
+                    </label>
+                    <div>
+                      <input
+                        type="number"
+                        name="month"
+                        onChange={handlePaymentInfo}
+                        onBlur={(e) => validatePaymentInfo(e)}
+                      />
+                      <span>/</span>
+                      <input
+                        type="number"
+                        name="year"
+                        onChange={handlePaymentInfo}
+                        onBlur={(e) => validatePaymentInfo(e)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className={styles["card-cvv"]}>
+                    <label>CVV</label>
+                    <input
+                      type="number"
+                      placeholder="123"
+                      name="cvv"
+                      onChange={handlePaymentInfo}
+                      onBlur={(e) => validatePaymentInfo(e)}
+                    />
+                  </div>
+                </div>
+
+                <div className={styles["card-name"]}>
+                  <div className={styles["name-input"]}>
+                    <label>Card Holder</label>
+                    <input
+                      type="text"
+                      name="cardHolder"
+                      onChange={handlePaymentInfo}
+                      onBlur={(e) => validatePaymentInfo(e)}
+                    />
+                  </div>
+                  <div className={styles["mastercard"]}>
+                    <img src={masterCard} alt="" />
+                  </div>
+                </div>
+              </article>
+            )}
             <label htmlFor="cash" className={styles["payment-item"]}>
               <input
                 type="radio"
