@@ -1,11 +1,26 @@
 export const ConfirmEmailPizza = () => {
+  const orderData = [
+    {
+      name: "Маргарита",
+      qty: 2,
+      size: "12см",
+      price: 15.5,
+    },
+    {
+      name: "Пеперони",
+      qty: 1,
+      size: "30см",
+      price: 18.5,
+    },
+  ];
+
+  let totalPrice = 0;
+  orderData.map((el) => {
+    totalPrice += el.price * el.qty;
+    return el
+  });
   return (
     <div className="es-wrapper-color">
-      {/*[if gte mso 9]>
-			<v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
-				<v:fill type="tile" color="#eeeeee"></v:fill>
-			</v:background>
-		<![endif]*/}
       <table
         className="es-wrapper"
         width="100%"
@@ -50,7 +65,6 @@ export const ConfirmEmailPizza = () => {
                               className="esd-structure es-p35t es-p35b es-p35r es-p35l"
                               align="left"
                             >
-                              {/*[if mso]><table width="530" cellpadding="0" cellspacing="0"><tr><td width="340" valign="top"><![endif]*/}
                               <table
                                 className="es-left"
                                 cellSpacing={0}
@@ -88,7 +102,6 @@ export const ConfirmEmailPizza = () => {
                                   </tr>
                                 </tbody>
                               </table>
-                              {/*[if mso]></td><td width="20"></td><td width="170" valign="top"><![endif]*/}
                               <table
                                 cellSpacing={0}
                                 cellPadding={0}
@@ -414,29 +427,36 @@ export const ConfirmEmailPizza = () => {
                                               >
                                                 <tbody>
                                                   {/* Поръчани продукти  */}
-
-                                                  <tr>
-                                                    <td
-                                                      style={{
-                                                        padding:
-                                                          "5px 10px 5px 0",
-                                                      }}
-                                                      width="80%"
-                                                      align="left"
-                                                    >
-                                                      <p>Purchased Item (1)</p>
-                                                    </td>
-                                                    <td
-                                                      style={{
-                                                        padding: "5px 0",
-                                                      }}
-                                                      width="20%"
-                                                      align="left"
-                                                    >
-                                                      <p>$100.00</p>
-                                                    </td>
-                                                  </tr>
-
+                                                  {orderData.map((el, i) => (
+                                                    <tr key={i}>
+                                                      <td
+                                                        style={{
+                                                          padding:
+                                                            "5px 10px 5px 0",
+                                                        }}
+                                                        width="80%"
+                                                        align="left"
+                                                      >
+                                                        <p>
+                                                          {el.name} ( {el.qty} )
+                                                        </p>
+                                                      </td>
+                                                      <td
+                                                        style={{
+                                                          padding: "5px 0",
+                                                        }}
+                                                        width="20%"
+                                                        align="left"
+                                                      >
+                                                        <p>
+                                                          {" "}
+                                                          {el.qty} x{" "}
+                                                          {el.price.toFixed(2)}{" "}
+                                                          лв
+                                                        </p>
+                                                      </td>
+                                                    </tr>
+                                                  ))}
                                                   {/* Поръчани продукти  */}
                                                   <tr>
                                                     <td
@@ -456,7 +476,7 @@ export const ConfirmEmailPizza = () => {
                                                       width="20%"
                                                       align="left"
                                                     >
-                                                      <p>$10.00</p>
+                                                      <p>2.99 лв</p>
                                                     </td>
                                                   </tr>
                                                   <tr>
@@ -541,7 +561,10 @@ export const ConfirmEmailPizza = () => {
                                                       <h4>Обща сума</h4>
                                                     </td>
                                                     <td width="20%">
-                                                      <h4>$115.00</h4>
+                                                      <h4>
+                                                        {totalPrice.toFixed(2)}{" "}
+                                                        лв
+                                                      </h4>
                                                     </td>
                                                   </tr>
                                                 </tbody>
@@ -787,10 +810,6 @@ export const ConfirmEmailPizza = () => {
                                                   flexDirection: "column",
                                                 }}
                                               >
-                                                {/* <strong>
-                                                  E-mail info@emet.bg
-                                                </strong> */}
-
                                                 <strong>
                                                   Телефон 0877474992
                                                 </strong>

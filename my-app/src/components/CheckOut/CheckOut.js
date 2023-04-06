@@ -6,7 +6,26 @@ import chip from "./chip.png";
 import payPass from "./PayPassicon.png";
 import masterCard from "./Mastercard.png";
 
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const Data = [
+  {
+    name: "Маргарита",
+    qty: 2,
+    size: "12см",
+    price: 15.5,
+  },
+  {
+    name: "Пеперони",
+    qty: 1,
+    size: "30см",
+    price: 18.5,
+  },
+];
 const CheckOut = () => {
+  const [orderData, setOrderData] = useState(Data);
+
   const [reciverData, setReciverData] = useState({
     firstName: "",
     lastName: "",
@@ -45,7 +64,7 @@ const CheckOut = () => {
   });
 
   const [tip, setTip] = useState(0);
-  
+
   const handleReciverChange = (e) => {
     if (e.target.name === "street" && showContent.delivery) {
       setReciverData((state) => ({
@@ -172,6 +191,40 @@ const CheckOut = () => {
         break;
     }
   };
+
+  const ConfirmPopup = withReactContent(Swal);
+  const removeProduct = (e, i) => {
+    let data = [...orderData];
+    ConfirmPopup.fire({
+      title: "Сигурен ли си, искаш да изтриеш този продукт?",
+      text: ` ${data[i].name}`,
+      icon: "warning",
+      iconColor: "#d33",
+      showCancelButton: true,
+      confirmButtonColor: "#000",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Да, изтрий го !",
+      cancelButtonText: "Откажи",
+      background: "#f9f8f7",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        data.splice(i, 1);
+        setOrderData([...data]);
+        ConfirmPopup.fire({
+          icon: "success",
+          iconColor: "#000",
+          title: "Успешно",
+          text: "Продукта беше изтрит от кошницата !",
+          confirmButtonColor: "#000",
+        });
+      }
+    });
+  };
+  let subTotal = orderData.reduce(function (a, b) {
+    return a + b.price * b.qty;
+  }, 0);
+  let totalSum = subTotal * (1 + tip / 100) - 2.99;
+  console.log(orderData);
   return (
     <section className={styles["container"]}>
       <div className={styles["order-cont"]}>
@@ -468,20 +521,27 @@ const CheckOut = () => {
         <div className={styles["order-info"]}>
           <h2 className={styles["title"]}>Продукти</h2>
           <ul className={styles["items-cont"]}>
-            <li className={styles["order-item"]}>
-              <div className={styles["qty-count"]}>1x</div>
-              <div className={styles["item-desc"]}>
-                <span className={styles["product-name"]}>
-                  Chicken & Mushrooms Pizza
-                </span>
-                <span className={styles["type"]}>12"</span>
-                <div className={styles["action-btns"]}>
-                  <button className={styles["edit-btnn"]}>Редактиране</button>
-                  <button className={styles["remove-btn"]}>Премахване</button>
+            {orderData.map((el, i) => (
+              <li className={styles["order-item"]} key={i}>
+                <div className={styles["qty-count"]}>{el.qty}x</div>
+                <div className={styles["item-desc"]}>
+                  <span className={styles["product-name"]}>{el.name}</span>
+                  <span className={styles["type"]}>{el.size}"</span>
+                  <div className={styles["action-btns"]}>
+                    <button className={styles["edit-btnn"]}>Редактиране</button>
+                    <button
+                      className={styles["remove-btn"]}
+                      onClick={(e) => removeProduct(e, i)}
+                    >
+                      Премахване
+                    </button>
+                  </div>
                 </div>
-              </div>
-              <span className={styles["price"]}>15.50 лв</span>
-            </li>
+                <span className={styles["price"]}>
+                  {(el.price * el.qty).toFixed(2)} лв
+                </span>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
@@ -491,19 +551,25 @@ const CheckOut = () => {
           <ul className={styles["order-summary"]}>
             <li className={styles["info-item"]}>
               <span>Междинна сума</span>
-              <span>24.00 лв</span>
+              <span>{subTotal.toFixed(2)} лв</span>
             </li>
             <li className={styles["info-item"]}>
-              <span>Допълнителни разходи</span>
-              <span>2.13 лв</span>
+              <span>Куриерски разходи</span>
+              <span>2.99 лв</span>
             </li>
             <li className={styles["info-item"]}>
               <span>Размер на бакшиша {tip}%</span>
-              <span>{tip} лв</span>
+              <span>{(subTotal * (tip / 100)).toFixed(2)} лв</span>
             </li>
+            {promoCode && (
+              <li className={styles["info-item"]}>
+                <span>{promoCode}</span>
+                <span>*** лв</span>
+              </li>
+            )}
             <li className={styles["info-item"]}>
               <span>Бакшиша отива 100% при работниците на заведението</span>
-              <span>{tip} лв</span>
+              <span>{(subTotal * (tip / 100)).toFixed(2)} лв</span>
             </li>
             <li className={styles["discount-cont"]}>
               <button
@@ -556,7 +622,9 @@ const CheckOut = () => {
             </li>
             <li className={styles["info-item"]}>
               <span className={styles["total-sum"]}>Обща Сума</span>
-              <span className={styles["total-sum"]}>26.13 лв</span>
+              <span className={styles["total-sum"]}>
+                {totalSum.toFixed(2)} лв
+              </span>
             </li>
           </ul>
         </div>
