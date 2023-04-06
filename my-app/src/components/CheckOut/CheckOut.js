@@ -27,7 +27,7 @@ const CheckOut = () => {
     lastName: "",
     email: "",
     phone: "",
-    addres: ''
+    addres: "",
   });
   const [showContent, setShowContent] = useState({
     promo: false,
@@ -42,7 +42,7 @@ const CheckOut = () => {
     cardHolder: "",
     addres: "",
   });
-
+  const [tip, setTip] = useState(0);
   const handlePaymentInfo = (e) => {
     setPaymentInfo((state) => ({
       ...state,
@@ -74,6 +74,9 @@ const CheckOut = () => {
         [e.target.name]: e.target.value,
       }));
     }
+  };
+  const handleTip = (e) => {
+    setTip(Number(e.target.value));
   };
   const validate = (e) => {
     switch (e.target.name) {
@@ -109,16 +112,16 @@ const CheckOut = () => {
             ...state,
             addres: e.target.value.length <= 0,
           }));
-          break;
         }
+        break;
       case "pickUp":
         if (showContent.pickUp) {
           setErrors((state) => ({
             ...state,
             addres: e.target.value.length <= 0,
           }));
-          break;
         }
+        break;
       default:
         break;
     }
@@ -160,7 +163,7 @@ const CheckOut = () => {
         break;
     }
   };
-  console.log(paymentErrors);
+
   return (
     <section className={styles["container"]}>
       <div className={styles["order-cont"]}>
@@ -180,7 +183,7 @@ const CheckOut = () => {
                   placeholder="910 7th Ave New York, NY 10019"
                   name="street"
                   onChange={handleReciverChange}
-                  onBlur={(e)=> validate(e)}
+                  onBlur={(e) => validate(e)}
                   disabled={!showContent.delivery}
                   required
                 />
@@ -342,6 +345,9 @@ const CheckOut = () => {
                     name="cardNumber"
                     onChange={handlePaymentInfo}
                     onBlur={(e) => validatePaymentInfo(e)}
+                    style={{
+                      border: paymentErrors.cardNumber ? "2px solid red" : "",
+                    }}
                   />
                 </div>
                 <div className={styles["date-secret"]}>
@@ -356,6 +362,9 @@ const CheckOut = () => {
                         name="month"
                         onChange={handlePaymentInfo}
                         onBlur={(e) => validatePaymentInfo(e)}
+                        style={{
+                          border: paymentErrors.month ? "2px solid red" : "",
+                        }}
                       />
                       <span>/</span>
                       <input
@@ -363,6 +372,9 @@ const CheckOut = () => {
                         name="year"
                         onChange={handlePaymentInfo}
                         onBlur={(e) => validatePaymentInfo(e)}
+                        style={{
+                          border: paymentErrors.year ? "2px solid red" : "",
+                        }}
                       />
                     </div>
                   </div>
@@ -375,6 +387,9 @@ const CheckOut = () => {
                       name="cvv"
                       onChange={handlePaymentInfo}
                       onBlur={(e) => validatePaymentInfo(e)}
+                      style={{
+                        border: paymentErrors.cvv ? "2px solid red" : "",
+                      }}
                     />
                   </div>
                 </div>
@@ -387,6 +402,9 @@ const CheckOut = () => {
                       name="cardHolder"
                       onChange={handlePaymentInfo}
                       onBlur={(e) => validatePaymentInfo(e)}
+                      style={{
+                        border: paymentErrors.cardHolder ? "2px solid red" : "",
+                      }}
                     />
                   </div>
                   <div className={styles["mastercard"]}>
@@ -418,8 +436,7 @@ const CheckOut = () => {
                   }))
                 }
               >
-                <i className="fa-solid fa-money-bill"></i> Код за
-                отстъпка/ваучер
+                <i className="fa-solid fa-tag"></i> Код за отстъпка/ваучер
               </button>
               {showContent.promo && <input type="text" name="promoCode" />}
             </div>
@@ -441,7 +458,7 @@ const CheckOut = () => {
                   <button className={styles["remove-btn"]}>Премахване</button>
                 </div>
               </div>
-              <span className={styles["price"]}>$15.50</span>
+              <span className={styles["price"]}>15.50 лв</span>
             </li>
           </ul>
         </div>
@@ -452,31 +469,59 @@ const CheckOut = () => {
           <ul className={styles["order-summary"]}>
             <li className={styles["info-item"]}>
               <span>Междинна сума</span>
-              <span>$24.00</span>
+              <span>24.00 лв</span>
             </li>
             <li className={styles["info-item"]}>
               <span>Допълнителни разходи</span>
-              <span>$2.13</span>
+              <span>2.13 лв</span>
             </li>
             <li className={styles["info-item"]}>
-              <span>Размер на бакшиша{"(Няма)"}</span>
-              <span>$0.00</span>
+              <span>Размер на бакшиша {tip}%</span>
+              <span>{tip} лв</span>
             </li>
             <li className={styles["info-item"]}>
               <span>Бакшиша отива 100% при работниците на заведението</span>
-              <span>$0.00</span>
+              <span>{tip} лв</span>
             </li>
             <li className={styles["discount-cont"]}>
-              <button className={styles["tip-btn"]} name="None">
+              <button
+                className={`${styles["tip-btn"]} ${
+                  tip === 0 ? styles["active-btn"] : ""
+                }`}
+                name="Няма"
+                onClick={handleTip}
+                value={0}
+              >
                 Няма
               </button>
-              <button className={styles["tip-btn"]} name="5">
+              <button
+                className={`${styles["tip-btn"]} ${
+                  tip === 5 ? styles["active-btn"] : ""
+                }`}
+                name="5"
+                value={5}
+                onClick={handleTip}
+              >
                 5%
               </button>
-              <button className={styles["tip-btn"]} name="10">
+              <button
+                name="10"
+                value={10}
+                onClick={handleTip}
+                className={`${styles["tip-btn"]} ${
+                  tip === 10 ? styles["active-btn"] : ""
+                }`}
+              >
                 10%
               </button>
-              <button className={styles["tip-btn"]} name="15">
+              <button
+                className={`${styles["tip-btn"]} ${
+                  tip === 15 ? styles["active-btn"] : ""
+                }`}
+                name="15"
+                value={15}
+                onClick={handleTip}
+              >
                 15%
               </button>
               <input
@@ -484,11 +529,12 @@ const CheckOut = () => {
                 type="number"
                 name="other"
                 placeholder="Друга сума"
+                onChange={handleTip}
               />
             </li>
             <li className={styles["info-item"]}>
-              <span className={styles["total-sum"]}>Total</span>
-              <span className={styles["total-sum"]}>$26.13</span>
+              <span className={styles["total-sum"]}>Обща Сума</span>
+              <span className={styles["total-sum"]}>26.13 лв</span>
             </li>
           </ul>
         </div>

@@ -105,7 +105,7 @@
   font-weight: 600;
   letter-spacing: 1.1px;
 }
-.desc-cont input[type="text"]:focus{
+.desc-cont input[type="text"]:focus {
   border: 1px solid rgb(184, 182, 182);
 }
 
@@ -214,7 +214,7 @@
   background-color: #444243;
   border-radius: 50%;
 }
-.payment-title{
+.payment-title {
   font-weight: 600;
 }
 
@@ -319,7 +319,7 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 20px;
 }
 
 .order-info {
@@ -419,21 +419,23 @@
   border-radius: 6px;
   font-weight: bold;
   width: 15%;
+  cursor: pointer;
 }
 
-.tip-btn:focus {
+.active-btn {
   background-color: black;
   color: white;
 }
+
 
 .total-sum {
   color: black;
   font-weight: bold;
   padding-top: 24px;
 }
-  .mastercard {
-    padding-right: 12px;
-  }
+.mastercard {
+  padding-right: 12px;
+}
 
 @media screen and (max-width: 1324px) {
   .container {
@@ -479,10 +481,10 @@
   .card-number {
     margin: 0 auto;
   }
-.card-name{
-  flex-direction: column;
-  margin: 0 auto;
-}
+  .card-name {
+    flex-direction: column;
+    margin: 0 auto;
+  }
   .card-name,
   .date-secret,
   .card-number {
@@ -548,5 +550,8 @@
     padding-left: 0;
     padding-top: 12px;
     gap: 12px;
+  }
+  .price{
+    position: absolute;
   }
 }
