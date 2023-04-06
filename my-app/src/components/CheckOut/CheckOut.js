@@ -14,6 +14,7 @@ const CheckOut = () => {
     phone: "",
   });
   const [paymentMethod, setPaymentMethod] = useState(null);
+  const [promoCode, setPromoCode] = useState(null);
   const [paymentInfo, setPaymentInfo] = useState({
     cardNumber: "",
     month: "",
@@ -42,17 +43,9 @@ const CheckOut = () => {
     cardHolder: "",
     addres: "",
   });
-  const [tip, setTip] = useState(0);
-  const handlePaymentInfo = (e) => {
-    setPaymentInfo((state) => ({
-      ...state,
-      [e.target.name]: e.target.value,
-    }));
-  };
-  const handlePaymentMethod = (e) => {
-    setPaymentMethod(e.target.value);
-  };
 
+  const [tip, setTip] = useState(0);
+  
   const handleReciverChange = (e) => {
     if (e.target.name === "street" && showContent.delivery) {
       setReciverData((state) => ({
@@ -75,9 +68,25 @@ const CheckOut = () => {
       }));
     }
   };
+
+  const handlePaymentInfo = (e) => {
+    setPaymentInfo((state) => ({
+      ...state,
+      [e.target.name]: e.target.value,
+    }));
+  };
+  const handlePaymentMethod = (e) => {
+    setPaymentMethod(e.target.value);
+  };
+  const handlePromoCode = (e) => {
+    setPromoCode(e.target.value);
+  };
   const handleTip = (e) => {
     setTip(Number(e.target.value));
   };
+
+  // Validation on inputs
+
   const validate = (e) => {
     switch (e.target.name) {
       case "email":
@@ -163,7 +172,6 @@ const CheckOut = () => {
         break;
     }
   };
-
   return (
     <section className={styles["container"]}>
       <div className={styles["order-cont"]}>
@@ -191,12 +199,16 @@ const CheckOut = () => {
               {showContent.delivery ? (
                 <button
                   className={styles["save-btn"]}
-                  onClick={() =>
+                  onClick={() => {
                     setShowContent((state) => ({
                       ...state,
                       delivery: !showContent.delivery,
-                    }))
-                  }
+                    }));
+                    setReciverData((state) => ({
+                      ...state,
+                      addres: "",
+                    }));
+                  }}
                 >
                   Откажи
                 </button>
@@ -230,12 +242,16 @@ const CheckOut = () => {
               {showContent.pickUp ? (
                 <button
                   className={styles["save-btn"]}
-                  onClick={() =>
+                  onClick={() => {
                     setShowContent((state) => ({
                       ...state,
                       pickUp: !showContent.pickUp,
-                    }))
-                  }
+                    }));
+                    setReciverData((state) => ({
+                      ...state,
+                      addres: "",
+                    }));
+                  }}
                 >
                   Откажи
                 </button>
@@ -438,7 +454,13 @@ const CheckOut = () => {
               >
                 <i className="fa-solid fa-tag"></i> Код за отстъпка/ваучер
               </button>
-              {showContent.promo && <input type="text" name="promoCode" />}
+              {showContent.promo && (
+                <input
+                  type="text"
+                  name="promoCode"
+                  onChange={handlePromoCode}
+                />
+              )}
             </div>
           </div>
         </div>

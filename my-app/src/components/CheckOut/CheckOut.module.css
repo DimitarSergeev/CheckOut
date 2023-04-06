@@ -137,6 +137,7 @@
   border-bottom: 3px solid #f4f2ef;
 }
 
+
 .reciver-cont {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -392,6 +393,9 @@
   border-radius: 6px;
   cursor: pointer;
   font-size: 18px;
+}
+.finish-btn:hover{
+  background-color: rgb(53, 53, 53);
 }
 
 .order-summary {
