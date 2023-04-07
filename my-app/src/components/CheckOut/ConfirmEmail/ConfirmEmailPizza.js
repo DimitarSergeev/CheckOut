@@ -167,37 +167,6 @@ export const ConfirmEmailPizza = () => {
                                                         cellSpacing={0}
                                                         cellPadding={0}
                                                       >
-                                                        <tbody>
-                                                          <tr>
-                                                            <td
-                                                              className="esd-block-text"
-                                                              align="right"
-                                                            >
-                                                              <p>
-                                                                <a
-                                                                  target="_blank"
-                                                                  rel="noreferrer"
-                                                                  style={{
-                                                                    fontSize: 24,
-                                                                    lineHeight:
-                                                                      "100%",
-                                                                    textDecoration:
-                                                                      "none",
-                                                                    color:
-                                                                      "white",
-                                                                    paddingRight:
-                                                                      "28px",
-                                                                    paddingTop:
-                                                                      "48px",
-                                                                  }}
-                                                                  href="https://sstore.siweb.bg/"
-                                                                >
-                                                                  Shop
-                                                                </a>
-                                                              </p>
-                                                            </td>
-                                                          </tr>
-                                                        </tbody>
                                                       </table>
                                                     </td>
                                                   </tr>

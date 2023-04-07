@@ -1,14 +1,11 @@
 import styles from "./CheckOut.module.css";
 
-import { useState } from "react";
-
-import chip from "./chip.png";
-import payPass from "./PayPassicon.png";
-import masterCard from "./Mastercard.png";
+import { useState ,useEffect} from "react";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
+import * as checkOutService from '../../services/CheckOutService'
 const Data = [
   {
     name: "Маргарита",
@@ -24,6 +21,14 @@ const Data = [
   },
 ];
 const CheckOut = () => {
+
+  // useEffect(()=>{
+  //       checkOutService.getOrderData()
+  //       .then(result =>{
+  //         setOrderData(result)
+  //       })
+  // },[])
+
   const [orderData, setOrderData] = useState(Data);
 
   const [reciverData, setReciverData] = useState({
@@ -191,7 +196,7 @@ const CheckOut = () => {
         break;
     }
   };
-
+//
   const ConfirmPopup = withReactContent(Swal);
   const removeProduct = (e, i) => {
     let data = [...orderData];
@@ -199,10 +204,10 @@ const CheckOut = () => {
       title: "Сигурен ли си, искаш да изтриеш този продукт?",
       text: ` ${data[i].name}`,
       icon: "warning",
-      iconColor: "#d33",
+      iconColor: "firebrick",
       showCancelButton: true,
       confirmButtonColor: "#000",
-      cancelButtonColor: "#d33",
+      cancelButtonColor: "firebrick",
       confirmButtonText: "Да, изтрий го !",
       cancelButtonText: "Откажи",
       background: "#f9f8f7",
@@ -220,11 +225,22 @@ const CheckOut = () => {
       }
     });
   };
+  const handleQtyChange = (e, i) => {
+    let data = [...orderData];
+    if (e.target.textContent === '-' && data[i].qty > 1) {
+        data[i].qty -= 1
+        setOrderData(data)
+    }else if (e.target.textContent === "+") {
+      data[i].qty += 1
+      setOrderData(data)
+    }
+  };
+
+  const deliveryTax = 2.99;
   let subTotal = orderData.reduce(function (a, b) {
     return a + b.price * b.qty;
   }, 0);
-  let totalSum = subTotal * (1 + tip / 100) - 2.99;
-  console.log(orderData);
+  let totalSum = subTotal * (1 + tip / 100) - deliveryTax;
   return (
     <section className={styles["container"]}>
       <div className={styles["order-cont"]}>
@@ -241,12 +257,16 @@ const CheckOut = () => {
                 <input type="text" defaultValue="Адрес за доставка" disabled />
                 <input
                   type="text"
-                  placeholder="910 7th Ave New York, NY 10019"
+                  placeholder="Въведи адреса тук ..."
                   name="street"
                   onChange={handleReciverChange}
                   onBlur={(e) => validate(e)}
                   disabled={!showContent.delivery}
-                  required
+                  style={{
+                    border: showContent.delivery
+                      ? "1px solid rgb(184, 182, 182)"
+                      : "",
+                  }}
                 />
               </div>
               {showContent.delivery ? (
@@ -287,9 +307,14 @@ const CheckOut = () => {
                 <input
                   type="text"
                   name="pickUp"
-                  placeholder="Уточнение"
+                  placeholder="Уточнение ..."
                   disabled={!showContent.pickUp}
                   onChange={handleReciverChange}
+                  style={{
+                    border: showContent.pickUp
+                      ? "1px solid rgb(184, 182, 182)"
+                      : "",
+                  }}
                 />
               </div>
               {showContent.pickUp ? (
@@ -402,84 +427,7 @@ const CheckOut = () => {
 
             {paymentMethod === "credit-debit" && (
               <article className={styles["card-holder"]}>
-                <div className={styles["card-icons"]}>
-                  <img src={chip} alt="" />
-                  <img src={payPass} alt="" />
-                </div>
-                <div className={styles["card-number"]}>
-                  <label>Номер на картата</label>
-                  <input
-                    type="number"
-                    placeholder="1234 5678 1234 5678"
-                    name="cardNumber"
-                    onChange={handlePaymentInfo}
-                    onBlur={(e) => validatePaymentInfo(e)}
-                    style={{
-                      border: paymentErrors.cardNumber ? "2px solid red" : "",
-                    }}
-                  />
-                </div>
-                <div className={styles["date-secret"]}>
-                  <div className={styles["card-date"]}>
-                    <label>
-                      <span>VALID</span>
-                      <span>THRU</span>
-                    </label>
-                    <div>
-                      <input
-                        type="number"
-                        name="month"
-                        onChange={handlePaymentInfo}
-                        onBlur={(e) => validatePaymentInfo(e)}
-                        style={{
-                          border: paymentErrors.month ? "2px solid red" : "",
-                        }}
-                      />
-                      <span>/</span>
-                      <input
-                        type="number"
-                        name="year"
-                        onChange={handlePaymentInfo}
-                        onBlur={(e) => validatePaymentInfo(e)}
-                        style={{
-                          border: paymentErrors.year ? "2px solid red" : "",
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className={styles["card-cvv"]}>
-                    <label>CVV</label>
-                    <input
-                      type="number"
-                      placeholder="123"
-                      name="cvv"
-                      onChange={handlePaymentInfo}
-                      onBlur={(e) => validatePaymentInfo(e)}
-                      style={{
-                        border: paymentErrors.cvv ? "2px solid red" : "",
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <div className={styles["card-name"]}>
-                  <div className={styles["name-input"]}>
-                    <label>Име на картодържател</label>
-                    <input
-                      type="text"
-                      name="cardHolder"
-                      onChange={handlePaymentInfo}
-                      onBlur={(e) => validatePaymentInfo(e)}
-                      style={{
-                        border: paymentErrors.cardHolder ? "2px solid red" : "",
-                      }}
-                    />
-                  </div>
-                  <div className={styles["mastercard"]}>
-                    <img src={masterCard} alt="" />
-                  </div>
-                </div>
+                {/* PayPass */}
               </article>
             )}
             <label htmlFor="cash" className={styles["payment-item"]}>
@@ -523,12 +471,25 @@ const CheckOut = () => {
           <ul className={styles["items-cont"]}>
             {orderData.map((el, i) => (
               <li className={styles["order-item"]} key={i}>
-                <div className={styles["qty-count"]}>{el.qty}x</div>
+                <div className={styles["qty-cont"]}>
+                  <span
+                    className={styles["qty-btn"]}
+                    onClick={(e) => handleQtyChange(e, i)}
+                  >
+                    -
+                  </span>
+                  <span className={styles["qty-count"]}> {el.qty}x</span>
+                  <span
+                    className={styles["qty-btn"]}
+                    onClick={(e) => handleQtyChange(e, i)}
+                  >
+                    +
+                  </span>
+                </div>
                 <div className={styles["item-desc"]}>
                   <span className={styles["product-name"]}>{el.name}</span>
                   <span className={styles["type"]}>{el.size}"</span>
                   <div className={styles["action-btns"]}>
-                    <button className={styles["edit-btnn"]}>Редактиране</button>
                     <button
                       className={styles["remove-btn"]}
                       onClick={(e) => removeProduct(e, i)}
